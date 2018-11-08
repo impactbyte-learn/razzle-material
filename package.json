@@ -31,6 +31,8 @@
     "@types/react-jss": "^8.6.0",
     "@types/react-router-dom": "^4.3.1",
     "@types/webpack-env": "^1.13.6",
+    "graphql-code-generator": "^0.13.0",
+    "graphql-codegen-typescript-react-apollo-template": "^0.13.0",
     "razzle": "^2.4.0",
     "razzle-plugin-typescript": "^2.4.0",
     "ts-jest": "^23.10.4",
