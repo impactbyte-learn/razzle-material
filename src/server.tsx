@@ -2,6 +2,9 @@ import express from "express";
 import React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
+import { SheetsRegistry, createGenerateClassName } from "jss";
+import { JssProvider } from "react-jss";
 
 import App from "./App";
 
@@ -16,12 +19,25 @@ const server = express()
   .disable("x-powered-by")
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR!))
   .get("/*", (req: express.Request, res: express.Response) => {
+    const sheetsRegistry = new SheetsRegistry();
+    const sheetsManager = new Map();
+    const theme = createMuiTheme();
+    const generateClassName = createGenerateClassName();
+
     const context = {};
     const markup = renderToString(
-      <StaticRouter context={context} location={req.url}>
-        <App />
-      </StaticRouter>,
+      <JssProvider
+        registry={sheetsRegistry}
+        generateClassName={generateClassName}
+      >
+        <MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
+          <StaticRouter context={context} location={req.url}>
+            <App />
+          </StaticRouter>
+        </MuiThemeProvider>
+      </JssProvider>,
     );
+    const css = sheetsRegistry.toString();
     res.send(
       `<!doctype html>
     <html lang="">
@@ -43,6 +59,7 @@ const server = express()
     </head>
     <body>
         <div id="root">${markup}</div>
+        <style id="jss-server-side">${css}</style>
     </body>
 </html>`,
     );
