@@ -7,27 +7,14 @@ import { createGenerateClassName } from "jss";
 import App from "./App";
 import { JssProvider } from "react-jss";
 
-class Main extends Component {
-  public componentDidMount() {
-    const jssStyles = document.getElementById("jss-server-side");
-    if (jssStyles && jssStyles.parentNode) {
-      jssStyles.parentNode.removeChild(jssStyles);
-    }
-  }
-
-  public render() {
-    return <App />;
-  }
-}
-
-const theme = createMuiTheme();
+const theme = createMuiTheme({ typography: { useNextVariants: true } });
 const generateClassName = createGenerateClassName();
 
 hydrate(
   <JssProvider generateClassName={generateClassName}>
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <Main />
+        <App />
       </BrowserRouter>
     </MuiThemeProvider>
   </JssProvider>,

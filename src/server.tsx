@@ -21,7 +21,7 @@ const server = express()
   .get("/*", (req: express.Request, res: express.Response) => {
     const sheetsRegistry = new SheetsRegistry();
     const sheetsManager = new Map();
-    const theme = createMuiTheme();
+    const theme = createMuiTheme({ typography: { useNextVariants: true } });
     const generateClassName = createGenerateClassName();
 
     const context = {};
