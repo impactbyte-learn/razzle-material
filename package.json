@@ -6,7 +6,8 @@
     "start": "razzle start",
     "build": "razzle build",
     "test": "razzle test --env=jsdom",
-    "start:prod": "NODE_ENV=production node build/server.js"
+    "start:prod": "NODE_ENV=production node build/server.js",
+    "generate": "gql-gen --schema http://localhost:4000 --template graphql-codegen-typescript-react-apollo-template --out ./src/generated \"./src/**/*.gql\""
   },
   "dependencies": {
     "@material-ui/core": "^3.4.0",

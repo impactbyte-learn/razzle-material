@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import { User } from "../__generated__/types";
+import { User } from "../generated/types";
 
 class Home extends React.Component {
   public render() {
