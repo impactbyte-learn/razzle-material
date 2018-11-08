@@ -5,6 +5,9 @@ import { StaticRouter } from "react-router-dom";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import { SheetsRegistry, createGenerateClassName } from "jss";
 import { JssProvider } from "react-jss";
+import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
+import { ApolloProvider, getDataFromTree } from "react-apollo";
+import fetch from "node-fetch";
 
 import App from "./App";
 
@@ -18,25 +21,36 @@ syncLoadAssets();
 const server = express()
   .disable("x-powered-by")
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR!))
-  .get("/*", (req: express.Request, res: express.Response) => {
+  .get("/*", async (req: express.Request, res: express.Response) => {
     const sheetsRegistry = new SheetsRegistry();
     const sheetsManager = new Map();
     const theme = createMuiTheme({ typography: { useNextVariants: true } });
     const generateClassName = createGenerateClassName();
 
+    const client = new ApolloClient({
+      link: new HttpLink({ uri: "http://localhost:4000", fetch: fetch as any }),
+      cache: new InMemoryCache(),
+      ssrMode: true,
+    });
+
     const context = {};
-    const markup = renderToString(
-      <JssProvider
-        registry={sheetsRegistry}
-        generateClassName={generateClassName}
-      >
-        <MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
-          <StaticRouter context={context} location={req.url}>
-            <App />
-          </StaticRouter>
-        </MuiThemeProvider>
-      </JssProvider>,
+    const RenderApp = (
+      <ApolloProvider client={client}>
+        <JssProvider
+          registry={sheetsRegistry}
+          generateClassName={generateClassName}
+        >
+          <MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
+            <StaticRouter context={context} location={req.url}>
+              <App />
+            </StaticRouter>
+          </MuiThemeProvider>
+        </JssProvider>
+      </ApolloProvider>
     );
+    await getDataFromTree(RenderApp);
+    const markup = renderToString(RenderApp);
+    const state = client.cache.extract();
     const css = sheetsRegistry.toString();
     res.send(
       `<!doctype html>
@@ -59,6 +73,7 @@ const server = express()
     </head>
     <body>
         <div id="root">${markup}</div>
+        <script>window.__APOLLO_STATE__=${JSON.stringify(state)}</script>
         <style id="jss-server-side">${css}</style>
     </body>
 </html>`,

@@ -6,18 +6,27 @@ import { createGenerateClassName } from "jss";
 
 import App from "./App";
 import { JssProvider } from "react-jss";
+import { ApolloProvider } from "react-apollo";
+import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
 
 const theme = createMuiTheme({ typography: { useNextVariants: true } });
 const generateClassName = createGenerateClassName();
 
+const client = new ApolloClient({
+  link: new HttpLink({ uri: "http://localhost:4000" }),
+  cache: new InMemoryCache().restore((window as any).__APOLLO_STATE__),
+});
+
 hydrate(
-  <JssProvider generateClassName={generateClassName}>
-    <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </MuiThemeProvider>
-  </JssProvider>,
+  <ApolloProvider client={client}>
+    <JssProvider generateClassName={generateClassName}>
+      <MuiThemeProvider theme={theme}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </MuiThemeProvider>
+    </JssProvider>
+  </ApolloProvider>,
   document.getElementById("root"),
 );
 
