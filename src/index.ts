@@ -1,4 +1,5 @@
 import express from "express";
+import { preloadAll } from "react-loadable";
 
 // this require is necessary for server HMR to recover from error
 // tslint:disable-next-line:no-var-requires
@@ -18,12 +19,14 @@ if (module.hot) {
 
 const port = process.env.PORT || 3000;
 
-export default express()
-  .use((req, res) => app.handle(req, res))
-  .listen(port, (err: Error) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(`> Started on port ${port}`);
-  });
+export default preloadAll().then(() => {
+  express()
+    .use((req, res) => app.handle(req, res))
+    .listen(port, (err: Error) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(`> Started on port ${port}`);
+    });
+});

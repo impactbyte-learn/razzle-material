@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
+import Loadable from "react-loadable";
 
-import Home from "./components/Home";
+const Home = Loadable({
+  loader: () => import("./components/Home"),
+  loading: () => null,
+});
 
 class App extends Component {
   public componentDidMount() {
