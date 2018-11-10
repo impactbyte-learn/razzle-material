@@ -9,4 +9,5 @@
 - GraphQL Code Generator
 - React Loadable
 - Jest
+- React Helmet
 - PWA _(not implemented)_
