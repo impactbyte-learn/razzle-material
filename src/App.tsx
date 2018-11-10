@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Route, Switch } from "react-router-dom";
+import Helmet from "react-helmet";
 import Loadable from "react-loadable";
 
 const Home = Loadable({
@@ -17,9 +18,16 @@ class App extends Component {
 
   public render() {
     return (
-      <Switch>
-        <Route exact={true} path="/" component={Home} />
-      </Switch>
+      <Fragment>
+        <Helmet>
+          <title>Change title</title>
+          <meta name="description" content="Todos on steroid!" />
+          <meta name="theme-color" content="#008f68" />
+        </Helmet>
+        <Switch>
+          <Route exact={true} path="/" component={Home} />
+        </Switch>
+      </Fragment>
     );
   }
 }

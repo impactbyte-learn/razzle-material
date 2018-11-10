@@ -9,6 +9,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
 import { ApolloProvider, getDataFromTree } from "react-apollo";
 import { Capture } from "react-loadable";
 import { getBundles } from "react-loadable/webpack";
+import Helmet from "react-helmet";
 import fetch from "node-fetch";
 import stats from "../build/react-loadable.json";
 
@@ -57,6 +58,7 @@ const server = express()
     );
     await getDataFromTree(RenderApp);
     const markup = renderToString(RenderApp);
+    const helmet = Helmet.renderStatic();
     const state = client.cache.extract();
     const css = sheetsRegistry.toString();
 
@@ -71,8 +73,9 @@ const server = express()
       <html lang="">
       <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta charSet='utf-8' />
-        <title>Razzle TypeScript</title>
+        <meta charset="UTF-8" />
+        ${helmet.title.toString()}
+        ${helmet.meta.toString()}
         <meta name="viewport" content="width=device-width, initial-scale=1">
         ${
           assets.client.css
