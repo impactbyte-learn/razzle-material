@@ -8,5 +8,5 @@
 - Material UI & JSS
 - GraphQL Code Generator
 - React Loadable
-- Jest & Enzyme
+- Jest
 - PWA _(not implemented)_
