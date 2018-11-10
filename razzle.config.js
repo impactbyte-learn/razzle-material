@@ -5,9 +5,7 @@ module.exports = {
   plugins: [
     {
       name: "typescript",
-      options: {
-        useBabel: true,
-      },
+      options: { useBabel: true },
     },
   ],
   modify: (config, { target }) => {
