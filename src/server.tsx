@@ -87,15 +87,17 @@ const server = express()
         <div id="root">${markup}</div>
         <script>window.__APOLLO_STATE__=${JSON.stringify(state)}</script>
         <style id="jss-server-side">${css}</style>
-        ${chunks.map(
-          (chunk) =>
-            process.env.NODE_ENV === "production"
-              ? `<script src="/${chunk.file}"></script>`
-              : `<script src="http://${process.env.HOST}:${parseInt(
-                  process.env.PORT as string,
-                  10,
-                ) + 1}/${chunk.file}"></script>`,
-        )}
+        ${chunks
+          .map(
+            (chunk) =>
+              process.env.NODE_ENV === "production"
+                ? `<script src="/${chunk.file}"></script>`
+                : `<script src="http://${process.env.HOST}:${parseInt(
+                    process.env.PORT as string,
+                    10,
+                  ) + 1}/${chunk.file}"></script>`,
+          )
+          .join("\n")}
         ${
           process.env.NODE_ENV === "production"
             ? `<script src="${assets.client.js}"></script>`
