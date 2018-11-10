@@ -70,40 +70,38 @@ const server = express()
         `<!doctype html>
       <html lang="">
       <head>
-          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-          <meta charSet='utf-8' />
-          <title>Razzle TypeScript</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          ${
-            assets.client.css
-              ? `<link rel="stylesheet" href="${assets.client.css}">`
-              : ""
-          }
-          ${styles
-            .map((style) => `<link href="${style.file}" rel="stylesheet"/>`)
-            .join("\n")}
-          ${
-            process.env.NODE_ENV === "production"
-              ? `<script src="${assets.client.js}" defer></script>`
-              : `<script src="${assets.client.js}" defer crossorigin></script>`
-          }
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta charSet='utf-8' />
+        <title>Razzle TypeScript</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        ${
+          assets.client.css
+            ? `<link rel="stylesheet" href="${assets.client.css}">`
+            : ""
+        }
+        ${styles.map(
+          (style) => `<link href="${style.file}" rel="stylesheet"/>`,
+        )}
       </head>
       <body>
-          <div id="root">${markup}</div>
-          <script>window.__APOLLO_STATE__=${JSON.stringify(state)}</script>
-          <style id="jss-server-side">${css}</style>
-          ${chunks
-            .map(
-              (chunk) =>
-                process.env.NODE_ENV === "production"
-                  ? `<script src="/${chunk.file}"></script>`
-                  : `<script src="http://${process.env.HOST}:${parseInt(
-                      process.env.PORT as string,
-                      10,
-                    ) + 1}/${chunk.file}"></script>`,
-            )
-            .join("\n")}
-          <script>window.main();</script>
+        <div id="root">${markup}</div>
+        <script>window.__APOLLO_STATE__=${JSON.stringify(state)}</script>
+        <style id="jss-server-side">${css}</style>
+        ${chunks.map(
+          (chunk) =>
+            process.env.NODE_ENV === "production"
+              ? `<script src="/${chunk.file}"></script>`
+              : `<script src="http://${process.env.HOST}:${parseInt(
+                  process.env.PORT as string,
+                  10,
+                ) + 1}/${chunk.file}"></script>`,
+        )}
+        ${
+          process.env.NODE_ENV === "production"
+            ? `<script src="${assets.client.js}" defer></script>`
+            : `<script src="${assets.client.js}" defer crossorigin></script>`
+        }
+        <script>window.main();</script>
       </body>
   </html>`,
       );
