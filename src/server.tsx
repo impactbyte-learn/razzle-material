@@ -98,8 +98,8 @@ const server = express()
         )}
         ${
           process.env.NODE_ENV === "production"
-            ? `<script src="${assets.client.js}" defer></script>`
-            : `<script src="${assets.client.js}" defer crossorigin></script>`
+            ? `<script src="${assets.client.js}"></script>`
+            : `<script src="${assets.client.js}" crossorigin></script>`
         }
         <script>window.main();</script>
       </body>
