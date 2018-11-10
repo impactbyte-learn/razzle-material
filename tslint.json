@@ -5,6 +5,7 @@
     "no-console": false,
     "object-literal-sort-keys": false,
     "jsx-no-multiline-js": false,
-    "curly": false
+    "curly": false,
+    "jsx-no-lambda": false
   }
 }

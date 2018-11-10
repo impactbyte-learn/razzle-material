@@ -3,11 +3,12 @@ import { hydrate } from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import { createGenerateClassName } from "jss";
-
-import App from "./App";
 import { JssProvider } from "react-jss";
 import { ApolloProvider } from "react-apollo";
 import { ApolloClient, InMemoryCache, HttpLink } from "apollo-boost";
+import { preloadReady } from "react-loadable";
+
+import App from "./App";
 
 const theme = createMuiTheme({ typography: { useNextVariants: true } });
 const generateClassName = createGenerateClassName();
@@ -17,18 +18,26 @@ const client = new ApolloClient({
   cache: new InMemoryCache().restore((window as any).__APOLLO_STATE__),
 });
 
-hydrate(
-  <ApolloProvider client={client}>
-    <JssProvider generateClassName={generateClassName}>
-      <MuiThemeProvider theme={theme}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </MuiThemeProvider>
-    </JssProvider>
-  </ApolloProvider>,
-  document.getElementById("root"),
-);
+function render(Root: any) {
+  preloadReady().then(() => {
+    hydrate(
+      <ApolloProvider client={client}>
+        <JssProvider generateClassName={generateClassName}>
+          <MuiThemeProvider theme={theme}>
+            <BrowserRouter>
+              <Root />
+            </BrowserRouter>
+          </MuiThemeProvider>
+        </JssProvider>
+      </ApolloProvider>,
+      document.getElementById("root"),
+    );
+  });
+}
+
+(window as any).main = () => {
+  render(App);
+};
 
 if (module.hot) {
   module.hot.accept();
